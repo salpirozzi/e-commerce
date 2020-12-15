@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { axios } from '../core/axios';
@@ -13,7 +13,7 @@ import { login } from '../reducers/userSlice';
 
 import { toast } from 'react-toastify';
 
-import './Form.css';
+import './css/Form.css';
 
 const LoginSchema = yup.object().shape({
     email: yup.string()
@@ -28,6 +28,8 @@ const LoginSchema = yup.object().shape({
 export default function Login() {
 
     const dispatch = useDispatch();
+    const history = useHistory();
+
     const handleSubmit = (values) => {
         axios.post("/user/login", {
             email: values.email,
@@ -36,6 +38,7 @@ export default function Login() {
         .then(res => {
             dispatch(login(res.data));
             toast.info("Login effettuato.");
+            history.push("/add");
         })
         .catch(err => toast.error(err.response.data))       
     }

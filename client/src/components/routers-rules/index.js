@@ -10,3 +10,11 @@ export const PublicRoute = ({ component: Component, ...rest }) => {
     
     return (<Route {...rest} render={props => <Component {...props} />} />); 
 }
+
+export const UserRoute = ({ component: Component, ...rest }) => {
+    const data = useSelector(getUser);
+
+    if(data.user === null)return (<Redirect to="/" />);
+    
+    return (<Route {...rest} render={props => <Component {...props} />} />); 
+}

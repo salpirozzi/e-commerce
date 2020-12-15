@@ -12,7 +12,7 @@ import { getUser, logout } from '../reducers/userSlice';
 
 import { toast } from 'react-toastify';
 
-import './Header.css';
+import './css/Header.css';
 
 export default function Header() {
     const data = useSelector(getUser);
@@ -54,10 +54,7 @@ export default function Header() {
                     </Link>
                     {dropdown === true && <span className="header__item__dropdown left">
                         <ul>
-                            <li><Link to="/chart">I tuoi acquisti</Link></li>
-                            <li>I tuoi resi</li>
-                            <li>Saldo account amazon</li>
-                            <li>Impostazioni</li>
+                            <li><Link to="/add">I tuoi prodotti</Link></li>
                         </ul>
                     </span>}
                 </div>

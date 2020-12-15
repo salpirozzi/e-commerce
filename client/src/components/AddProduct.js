@@ -10,8 +10,10 @@ import ShowChartIcon from '@material-ui/icons/ShowChart';
 
 import ProductViewer from './ProductViewer';
 
-import './Form.css';
-import './AddProduct.css';
+import './css/Form.css';
+import './css/AddProduct.css';
+
+import { toast } from 'react-toastify';
 
 const FILE_SIZE = '200000'; //200 KB - unità di misura: BYTE
 const SUPPORTED_FORMATS = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -42,18 +44,24 @@ export default function AddProduct() {
         if(img === null)return false;
 
         let reader = new FileReader();
-        reader.onloadend = () => uploadImage(images => [...images, reader.result]); 
+        reader.onloadend = () => {
+            if(images.includes(reader.result))return toast.error("Immagine già caricata.");
+            uploadImage(images => [...images, reader.result]);
+        } 
         reader.readAsDataURL(img);
         uploadFile(files => [...files, img]);
-        //formik.setFieldValue("img", null);
     }
     const onSubmit = (values) => {
         let data = new FormData();
-        files.map((x, i) => data.append(i, x));
 
-        axios.post("/images/add", data)
+        files.map((x, i) => data.append(i, x));
+        data.append("title", values.title);
+        data.append("price", values.price);
+        data.append("units", values.units);
+
+        axios.post("/products/add", data)
             //.then(res => console.log(res.data))
-            //.catch(err => console.log(err.response.data));
+            //.catch(err => toast.error(err.response.data));
     }
     const formik = useFormik({ 
         initialValues: {title: "", price: "", units: "", img: null},

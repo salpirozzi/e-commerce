@@ -11,7 +11,7 @@ import EmailIcon from '@material-ui/icons/Email';
 
 import { toast } from 'react-toastify';
 
-import './Form.css';
+import './css/Form.css';
 
 const RegisterSchema = yup.object().shape({
     name: yup.string()

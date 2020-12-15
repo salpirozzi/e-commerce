@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 
@@ -9,7 +9,7 @@ import AddProduct from './components/AddProduct';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { getUser, update, logout } from './reducers/userSlice';
-import { PublicRoute } from './components/routers-rules';
+import { PublicRoute, UserRoute } from './components/routers-rules';
 
 import './App.css';
 
@@ -19,6 +19,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function App() {
     const data = useSelector(getUser);
     const dispatch = useDispatch();
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         let token = localStorage.token;
@@ -29,7 +30,7 @@ export default function App() {
             const current_time = Date.now() / 1000; 
 
             if(decoded.exp < current_time) return dispatch(logout());
-            dispatch(update(id));
+            dispatch(update(id)).then(() => setLoaded(true))
         }
     }, [data, dispatch]);
 
@@ -43,11 +44,11 @@ export default function App() {
                     draggable={true}
                 />
                 <Header />
-                <AddProduct />
-                <Switch>
+                {loaded === true && <Switch>
                     <PublicRoute exact path='/login' component={Login} />
                     <PublicRoute exact path='/register' component={Register} />
-                </Switch>
+                    <UserRoute exact path='/add' component={AddProduct} />
+                </Switch>}
             </div>
         </Router>
     );

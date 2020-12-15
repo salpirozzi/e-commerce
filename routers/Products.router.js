@@ -12,7 +12,6 @@ const passport = require('passport');
 require('../passport')(passport);
 
 ProductsRouter.post('/retrieve', function(req, res) {
-
     ImagesModel.find({}, (err, doc) => res.json(doc));
 })
 
@@ -22,7 +21,7 @@ ProductsRouter.post('/add', passport.authenticate('user', { session: false }), f
     form.parse(req, (err, fields, files) => {
         if(err != null)return res.status(422).json(err);
 
-        let decoded = jwt.verify(req.headers.authorization, process.env.BCRYPT_SECRET);
+        /*let decoded = jwt.verify(req.headers.authorization, process.env.BCRYPT_SECRET);
         let owner = decoded.id;
 
         let product = new ProductModel({
@@ -42,7 +41,10 @@ ProductsRouter.post('/add', passport.authenticate('user', { session: false }), f
                 product: product._id
             });
             image.save();
-        });
+        });*/
+
+        console.log(fields);
+        console.log(files);
     });
 });
 

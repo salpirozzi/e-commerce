@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
+
+import DeleteIcon from '@material-ui/icons/Delete';
 import './css/AddProduct.css';
 
-export default function ProductViewer({ images }) {
-    const [imgContainer, setImgContainer] = useState(null);
+export default function ProductViewer({ images, imgContainer, setImgContainer, deleteImage }) {
 
     return (
         <div className="product__slider">
@@ -16,8 +17,14 @@ export default function ProductViewer({ images }) {
                 )
             }
             </div>
-            {imgContainer === null && <img src={images[0]} alt="Foto" />}
-            {imgContainer !== null && <img src={imgContainer} alt="Foto" />}
+            <div className="product__slider__container">
+                <span className="product__slider__container__remove">
+                    <button type="button" onClick={() => deleteImage()}>
+                        <DeleteIcon />
+                    </button>
+                </span>
+                <img src={imgContainer} alt="Foto" />
+            </div>
         </div>
     )
 }

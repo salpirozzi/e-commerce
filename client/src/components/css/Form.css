@@ -55,8 +55,9 @@
 }
 
 .form__input__group label {
-    font-weight: bold;  
-    margin-bottom: 3px;
+    padding: 10px;
+    font-size: 13px;
+    color: grey;
 }
 
 .form__input__group label:hover {

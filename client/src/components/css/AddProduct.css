@@ -6,7 +6,22 @@
     margin-bottom: 20px;
 }
 
-.product__slider > img {
+.product__slider__container {
+    position: relative;
+}
+
+.product__slider__container__remove {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.product__slider__container__remove button {
+    background-color: transparent;
+    border: none;
+}
+
+.product__slider__container > img {
     width: 20vw;
     height: 40vh;
     object-fit: contain;

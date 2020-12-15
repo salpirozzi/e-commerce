@@ -3,7 +3,6 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { axios } from '../core/axios';
 
-import AddIcon from '@material-ui/icons/Add';
 import TitleIcon from '@material-ui/icons/Title';
 import EuroIcon from '@material-ui/icons/Euro';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
@@ -32,6 +31,7 @@ export default function AddProduct() {
 
     const [images, uploadImage] = useState([]);
     const [files, uploadFile] = useState([]);
+    const [imgContainer, setImgContainer] = useState();
 
     /*const [uploadedImages, setUploadedImages] = useState([]);
     useEffect(() => {
@@ -39,7 +39,14 @@ export default function AddProduct() {
         .then(res => setUploadedImages(res.data))
         .catch(err => console.log(err.response.data));
     }, []);*/
-
+  
+    const deleteImage = () => {
+        let index = images.indexOf(imgContainer);
+        images.splice(index, 1);
+        let next = (index === images.length) ? index - 1 : index;
+        setImgContainer(images[next]);
+        if(!images.length) formik.setFieldValue("img", null);
+    }
     const addImage = (img) => {
         if(img === null)return false;
 
@@ -47,6 +54,7 @@ export default function AddProduct() {
         reader.onloadend = () => {
             if(images.includes(reader.result))return toast.error("Immagine già caricata.");
             uploadImage(images => [...images, reader.result]);
+            formik.setFieldValue("img", img);
         } 
         reader.readAsDataURL(img);
         uploadFile(files => [...files, img]);
@@ -124,13 +132,7 @@ export default function AddProduct() {
                 {formik.errors.units && <div className="form__input__error">{formik.errors.units}</div>}
 
                 <span>Immagini</span>
-                <div>
-                    Clicca sul tasto <strong>+</strong> per aggiungere l'immagine selezionata.
-                </div>
                 <div className={formik.errors.img ? "form__input__group error" : "form__input__group"}>
-                    <button className="product__image__button" type="button" onClick={() => addImage(formik.values.img)}>
-                        <AddIcon />
-                    </button>
                     <label htmlFor="img">
                         {formik.values.img !== null ? formik.values.img.name : "Aggiungi un'immagine"}
                     </label>
@@ -140,7 +142,7 @@ export default function AddProduct() {
                         type="file" 
                         placeholder="Nome prodotto"
                         onBlur={formik.handleBlur}
-                        onChange={e => formik.setFieldValue("img", e.currentTarget.files[0])}
+                        onChange={e => addImage(e.currentTarget.files[0])}
                         autoComplete="off"
                         accept=".png, .jpg, .jpeg"
                         style={{display: 'none'}}
@@ -148,7 +150,7 @@ export default function AddProduct() {
                 </div>
                 {formik.errors.img && <div className="form__input__error">{formik.errors.img}</div>}
 
-                {images.length > 0 && <ProductViewer images={images} />}
+                {images.length > 0 && <ProductViewer images={images} imgContainer={imgContainer || images[0]} setImgContainer={setImgContainer} deleteImage={deleteImage} />}
 
                 {/*uploadedImages.length > 0 && uploadedImages.map((x, i) => {
 

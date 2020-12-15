@@ -1,0 +1,86 @@
+.form__container {
+    display: flex;
+    width: 30vw;
+    margin: 20px auto;
+    align-items: center;
+    padding: 20px;
+    flex-direction: column;
+    border-radius: 5px;
+    border: 1px solid lightgrey;
+}
+
+.form__container > form {
+    width: 100%;
+}
+
+.form__container span {
+    justify-content: left;
+    font-weight: bold;
+}
+
+.form__input__group {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 10px 10px 0;
+    align-items: center;
+    border-radius: 5px;
+    color: black;
+    background-color: white;
+    border: 1.9px solid orange;
+}
+
+.form__input__group input {
+    padding: 10px;
+    border: none;
+    width: 100%;
+}
+
+.form__input__group input:focus {
+    outline: none;
+}
+
+.form__button {
+    background-color: orange;
+    height: 40px;
+    border: none;
+    border-radius: 3px;
+    width: 100%;
+}
+
+.form__input__error {
+    color: red;
+    font-size: 12px;
+    margin: 10px 10px 10px 0;
+    margin-top: 0px;
+}
+
+.form__input__group label {
+    font-weight: bold;  
+    margin-bottom: 3px;
+}
+
+.form__input__group label:hover {
+    cursor: pointer;
+}
+
+.form__input__group.error {
+    border: 1.9px solid red;
+    margin-bottom: 0px;
+}
+
+.form__info {
+    padding: 10px;
+    font-size: 10px;
+}
+
+.form__info > a {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    text-decoration: none;
+}
+
+@media screen and (max-width: 600px) {
+    .form__container { width: 100vw; }
+}

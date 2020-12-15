@@ -1,4 +1,4 @@
-import React, { useState/*, useEffect*/ } from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { axios } from '../core/axios';
@@ -32,13 +32,6 @@ export default function AddProduct() {
     const [images, uploadImage] = useState([]);
     const [files, uploadFile] = useState([]);
     const [imgContainer, setImgContainer] = useState();
-
-    /*const [uploadedImages, setUploadedImages] = useState([]);
-    useEffect(() => {
-        axios.post('/images/retrieve')
-        .then(res => setUploadedImages(res.data))
-        .catch(err => console.log(err.response.data));
-    }, []);*/
   
     const deleteImage = () => {
         let index = images.indexOf(imgContainer);
@@ -151,13 +144,6 @@ export default function AddProduct() {
                 {formik.errors.img && <div className="form__input__error">{formik.errors.img}</div>}
 
                 {images.length > 0 && <ProductViewer images={images} imgContainer={imgContainer || images[0]} setImgContainer={setImgContainer} deleteImage={deleteImage} />}
-
-                {/*uploadedImages.length > 0 && uploadedImages.map((x, i) => {
-
-                    let img = new Buffer(x.data.data);
-                    var rawData = img.toString('base64');
-                    return <img src={`data:image/jpeg;base64,${rawData}`} alt="Prodotto" key={i} />
-                })*/}
 
                 <button className="form__button" type="submit" disabled={!formik.dirty}>Pubblica</button>
             </form>

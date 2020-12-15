@@ -11,8 +11,9 @@ const ProductModel = require('../models/Products.model');
 const passport = require('passport');
 require('../passport')(passport);
 
-ProductsRouter.post('/retrieve', function(req, res) {
-    ImagesModel.find({}, (err, doc) => res.json(doc));
+ProductsRouter.post('/retrieve', async function(req, res) {
+    let data = await ProductModel.find().populate('images').populate('owner');
+    res.json(data);
 })
 
 ProductsRouter.post('/add', passport.authenticate('user', { session: false }), function(req, res) {
@@ -23,28 +24,27 @@ ProductsRouter.post('/add', passport.authenticate('user', { session: false }), f
 
         let decoded = jwt.verify(req.headers.authorization, process.env.BCRYPT_SECRET);
         let owner = decoded.id;
-
-        let product = new ProductModel({
-            title: fields.title,
-            price: fields.price,
-            units: fields.units,
-            owner: owner
-        })
-        product.save();
+        let images = [];
 
         Object.keys(files).map(x => {
             let old_path = files[x].path; 
             let raw_data = fs.readFileSync(old_path);
             let image = new ImagesModel({
                 type: files[x].type,
-                data: raw_data,
-                product: product._id
+                data: raw_data
             });
             image.save();
+            images.push(image._id);
         });
 
-        console.log(fields);
-        console.log(files);
+        let product = new ProductModel({
+            title: fields.title,
+            price: fields.price,
+            units: fields.units,
+            owner: owner,
+            images: images
+        })
+        product.save();
     });
 });
 

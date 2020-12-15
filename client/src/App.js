@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 
 import Header from './components/Header';
 import Login from './components/Login';
 import Register from './components/Register';
 import AddProduct from './components/AddProduct';
+import Home from './components/Home';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { getUser, update, logout } from './reducers/userSlice';
@@ -45,6 +46,7 @@ export default function App() {
                 />
                 <Header />
                 {loaded === true && <Switch>
+                    <Route exact path="/" component={Home} />
                     <PublicRoute exact path='/login' component={Login} />
                     <PublicRoute exact path='/register' component={Register} />
                     <UserRoute exact path='/add' component={AddProduct} />

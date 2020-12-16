@@ -21,7 +21,7 @@ ProductsRouter.post('/search', function(req, res) {
 
     form.parse(req, async(err, fields, files) => {
         if(err != null)return res.status(422).json(err);
-        let data = await ProductModel.find({ title: {$regex: fields.name, $options: 'i'} }).populate('images').populate('owner');
+        let data = await ProductModel.find({ title: {$regex: fields.name, $options: 'i'} }).limit(10).populate('images').populate('owner');
         res.json(data);
     });
 })

@@ -10,6 +10,8 @@ import ShowChartIcon from '@material-ui/icons/ShowChart';
 
 import ProductViewer from './ProductViewer';
 
+import NumberFormat from 'react-number-format';
+
 import './css/Form.css';
 import './css/AddProduct.css';
 
@@ -73,7 +75,7 @@ export default function AddProduct() {
             .catch(err => toast.error(err.response.data));
     }
     const formik = useFormik({ 
-        initialValues: {title: "", price: "", units: "", img: null},
+        initialValues: {title: "", price: 0, units: 1, img: null},
         validationSchema: ProductSchema,
         validateOnBlur: false,
         validateOnChange: false,
@@ -97,7 +99,6 @@ export default function AddProduct() {
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                         autoComplete="off"
-                        accept=".png, .jpg, .jpeg"
                     />
                 </div>
                 {formik.errors.title && <div className="form__input__error">{formik.errors.title}</div>}
@@ -105,16 +106,17 @@ export default function AddProduct() {
                 <span>Informazioni</span>
                 <div className={formik.errors.price || formik.errors.units ? "form__input__group error" : "form__input__group"}>
                     <EuroIcon />
-                    <input 
-                        name="price"
-                        id="price"
-                        type="number" 
-                        placeholder="Prezzo"
-                        value={formik.values.price}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange}
-                        autoComplete="off"
-                        accept=".png, .jpg, .jpeg"
+                    <NumberFormat 
+                        value={formik.values.price} 
+                        allowLeadingZeros={true} 
+                        allowNegative={false} 
+                        decimalScale={2}
+                        fixedDecimalScale={true}
+                        thousandSeparator={'.'}
+                        decimalSeparator={','}
+                        displayType={'input'}
+                        isNumericString={true}
+                        allowEmptyFormatting={true}
                     />
                     <ShowChartIcon />
                     <input 
@@ -126,7 +128,7 @@ export default function AddProduct() {
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                         autoComplete="off"
-                        accept=".png, .jpg, .jpeg"
+                        min={1}
                     />
                 </div>
                 {formik.errors.price && <div className="form__input__error">{formik.errors.price}</div>}

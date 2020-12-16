@@ -16,6 +16,16 @@ ProductsRouter.post('/retrieve', async function(req, res) {
     res.json(data);
 })
 
+ProductsRouter.post('/get', function(req, res) {
+    const form = formidable({ multiples: true });
+
+    form.parse(req, async(err, fields, files) => {
+        if(err != null)return res.status(422).json(err);
+        let data = await ProductModel.findbyId(fields.id).populate('images').populate('owner');
+        res.json(data);
+    });
+})
+
 ProductsRouter.post('/add', passport.authenticate('user', { session: false }), function(req, res) {
     const form = formidable({ multiples: true });
 
@@ -45,6 +55,7 @@ ProductsRouter.post('/add', passport.authenticate('user', { session: false }), f
             images: images
         })
         product.save();
+        res.json(product);
     });
 });
 

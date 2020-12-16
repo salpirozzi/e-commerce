@@ -18,13 +18,13 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function App() {
-    const data = useSelector(getUser);
+    const user = useSelector(getUser);
     const dispatch = useDispatch();
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         let token = localStorage.token;
-        if(token && data.user === null)
+        if(token && user === null)
         {
             let decoded = jwt_decode(token);
             const id = decoded.id;
@@ -33,7 +33,7 @@ export default function App() {
             if(decoded.exp < current_time) return dispatch(logout());
             dispatch(update(id)).then(() => setLoaded(true))
         }
-    }, [data, dispatch]);
+    }, [user, dispatch]);
 
     return (
         <Router>

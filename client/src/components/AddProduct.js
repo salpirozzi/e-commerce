@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { axios } from '../core/axios';
@@ -30,9 +31,9 @@ const ProductSchema = yup.object().shape({
 export default function AddProduct() {
 
     const [images, uploadImage] = useState([]);
-    const [files, uploadFile] = useState([]);
     const [imgContainer, setImgContainer] = useState();
-  
+    const history = useHistory();
+
     const deleteImage = () => {
         let index = images.indexOf(imgContainer);
         images.splice(index, 1);
@@ -45,24 +46,31 @@ export default function AddProduct() {
 
         let reader = new FileReader();
         reader.onloadend = () => {
-            if(images.includes(reader.result))return toast.error("Immagine già caricata.");
-            uploadImage(images => [...images, reader.result]);
+            const obj = {
+                url: reader.result, 
+                file: img
+            };
+            if(images.some(x => x.url === obj.url))return toast.error("Immagine già caricata.");
+            uploadImage(images => [...images, obj]);
             formik.setFieldValue("img", img);
         } 
         reader.readAsDataURL(img);
-        uploadFile(files => [...files, img]);
     }
     const onSubmit = (values) => {
         let data = new FormData();
 
-        files.map((x, i) => data.append(i, x));
+        images.map((x, i) => data.append(i, x.file));
         data.append("title", values.title);
         data.append("price", values.price);
         data.append("units", values.units);
 
         axios.post("/products/add", data)
-            //.then(res => console.log(res.data))
-            //.catch(err => toast.error(err.response.data));
+            .then(() => {
+                toast.info("Prodotto pubblicato!");
+                history.push('/');
+                formik.resetForm({});
+            })
+            .catch(err => toast.error(err.response.data));
     }
     const formik = useFormik({ 
         initialValues: {title: "", price: "", units: "", img: null},
@@ -145,7 +153,7 @@ export default function AddProduct() {
 
                 {images.length > 0 && <ProductViewer images={images} imgContainer={imgContainer || images[0]} setImgContainer={setImgContainer} deleteImage={deleteImage} />}
 
-                <button className="form__button" type="submit" disabled={!formik.dirty}>Pubblica</button>
+                <button className="form__button" type="submit" disabled={!formik.dirty || formik.isSubmitting}>Pubblica</button>
             </form>
         </div>
     );

@@ -12,7 +12,7 @@ export default function ProductViewer({ images, imgContainer, setImgContainer, d
                 images.map(
                     (img, i) => 
                     <button type="button" onClick={() => setImgContainer(img)} key={i}>
-                        <img src={img} alt="Foto" key={i} />
+                        <img src={img.url} alt="Foto" key={i} />
                     </button>
                 )
             }
@@ -23,7 +23,7 @@ export default function ProductViewer({ images, imgContainer, setImgContainer, d
                         <DeleteIcon />
                     </button>
                 </span>
-                <img src={imgContainer} alt="Foto" />
+                <img src={imgContainer.url} alt="Foto" />
             </div>
         </div>
     )

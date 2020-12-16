@@ -9,19 +9,21 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { getUser, logout } from '../reducers/userSlice';
+import { getCount } from '../reducers/chartSlice';
 
 import { toast } from 'react-toastify';
 
 import './css/Header.css';
 
 export default function Header() {
-    const data = useSelector(getUser);
+    const user = useSelector(getUser);
+    const chart = useSelector(getCount);
     const dispatch = useDispatch();
     const history = useHistory();
     const [dropdown, showDropdown] = useState(false);
 
     const exit = () => {
-        if(data.user === null)return false;
+        if(user === null)return false;
         
         dispatch(logout());
         history.push("/login");
@@ -44,11 +46,11 @@ export default function Header() {
                 <div className="header__right__item">
                     <span className="header__right__item__top">Benvenuto</span>
                     <Link className="header__right__item__bottom" to="/login">
-                        <AccountCircleIcon /> {data.user !== null ? data.user.firstname : "Utente"}
+                        <AccountCircleIcon /> {user !== null ? user.firstname : "Utente"}
                     </Link>
                 </div>
                 <div className="header__right__item" onMouseLeave={() => showDropdown(false)}>
-                    <span className="header__right__item__top chart">0</span>
+                    <span className="header__right__item__top chart">{chart}</span>
                     <Link className="header__right__item__bottom" to="/chart" onMouseOver={() => showDropdown(true)}>
                         <ShoppingCartIcon />
                     </Link>

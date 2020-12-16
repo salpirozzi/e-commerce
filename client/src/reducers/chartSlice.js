@@ -8,7 +8,7 @@ export const chartSlice = createSlice({
     },
     reducers: {
         remove: (state, action) => {
-            let index = state.items.indexOf(action.payload);
+            let index = state.items.findIndex(x => x._id === action.payload);
             state.items.splice(index, 1);
             state.items_count--;
         },

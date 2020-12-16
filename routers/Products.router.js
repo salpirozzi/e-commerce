@@ -16,8 +16,18 @@ ProductsRouter.post('/retrieve', async function(req, res) {
     res.json(data);
 })
 
+ProductsRouter.post('/search', function(req, res) {
+    const form = formidable({ multiples: false });
+
+    form.parse(req, async(err, fields, files) => {
+        if(err != null)return res.status(422).json(err);
+        let data = await ProductModel.find({ title: {$regex: fields.name, $options: 'i'} }).populate('images').populate('owner');
+        res.json(data);
+    });
+})
+
 ProductsRouter.post('/get', function(req, res) {
-    const form = formidable({ multiples: true });
+    const form = formidable({ multiples: false });
 
     form.parse(req, async(err, fields, files) => {
         if(err != null)return res.status(422).json(err);

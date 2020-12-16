@@ -18,6 +18,7 @@ export default function Home() {
 
     return (
         <div className="products__container">
+                    
             {products.length > 0 && products.map((x, i) => {
                 let img = new Buffer(x.images[0].data.data);
                 var rawData = img.toString('base64');

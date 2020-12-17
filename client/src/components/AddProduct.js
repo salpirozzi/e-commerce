@@ -19,13 +19,30 @@ import { toast } from 'react-toastify';
 
 const FILE_SIZE = '200000'; //200 KB - unità di misura: BYTE
 const SUPPORTED_FORMATS = ['image/png', 'image/jpg', 'image/jpeg'];
+const MIN_DATE = new Date(new Date().valueOf() - 1000 * 3600 * 24);
 
 const ProductSchema = yup.object().shape({
+    discount_start: yup.date() 
+        .min(MIN_DATE, "Non puoi inserire una data precedente a quella di oggi."),
+    discount_end: yup.date()
+        .test('minDate', "La data non può essere uguale o minore a quella d'inizio", function(value) {
+            if(this.parent.discount_start === undefined)return false;
+
+            let date_min = this.parent.discount_start.valueOf() + 1000 * 3600 * 24;
+            let val = value.valueOf();
+            return val >= date_min;
+        }),
+    discount: yup.number()
+        .min(5, "Lo sconto dev'essere di almeno del 5%")
+        .max(75, "Lo sconto può essere al massimo del 75%"),
+    price: yup.number()
+        .min(1, "Il prezzo non può essere inferiore a 1.")
+        .max(10000, "Il prezzo non può essere maggiore a 10.000,00 €"),
     title: yup.string()
         .required("Inserisci un nome prodotto.")
         .min(5, "Il titolo dev'essere lungo almeno 5 caratteri."),
     img: yup.mixed() 
-        .required("Inserisci una foto.")
+        .required("Inserisci almeno una foto.")
         .test('fileSize', "File troppo grande. (max 200 kb)", value => value.size <= FILE_SIZE) 
         .test('fileType', "Estensione non supportata. (.png .jpg .jpeg)", value => SUPPORTED_FORMATS.includes(value.type))
 });
@@ -65,6 +82,9 @@ export default function AddProduct() {
         data.append("title", values.title);
         data.append("price", values.price);
         data.append("units", values.units);
+        data.append("discount", values.discount);
+        data.append("discount_start", values.discount_start);
+        data.append("discount_end", values.discount_end);
 
         axios.post("/products/add", data)
             .then(() => {
@@ -75,7 +95,7 @@ export default function AddProduct() {
             .catch(err => toast.error(err.response.data));
     }
     const formik = useFormik({ 
-        initialValues: {title: "", price: 0, units: 1, img: null},
+        initialValues: {title: "", price: 0, units: 1, img: null, discount: 0, discount_start: "", discount_end: ""},
         validationSchema: ProductSchema,
         validateOnBlur: false,
         validateOnChange: false,
@@ -96,7 +116,6 @@ export default function AddProduct() {
                         type="text" 
                         placeholder="Nome prodotto"
                         value={formik.values.title}
-                        onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                         autoComplete="off"
                     />
@@ -117,6 +136,7 @@ export default function AddProduct() {
                         displayType={'input'}
                         isNumericString={true}
                         allowEmptyFormatting={true}
+                        onValueChange={val => formik.setFieldValue('price', val.floatValue)}
                     />
                     <ShowChartIcon />
                     <input 
@@ -125,7 +145,6 @@ export default function AddProduct() {
                         type="number" 
                         placeholder="Unità disponibili"
                         value={formik.values.units}
-                        onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                         autoComplete="off"
                         min={1}
@@ -133,6 +152,42 @@ export default function AddProduct() {
                 </div>
                 {formik.errors.price && <div className="form__input__error">{formik.errors.price}</div>}
                 {formik.errors.units && <div className="form__input__error">{formik.errors.units}</div>}
+
+                <span>Sconto programmato</span>
+                <div className={formik.errors.discount || formik.errors.discount_start ? "form__input__group error" : "form__input__group"}>
+                    <NumberFormat 
+                        value={formik.values.discount} 
+                        allowLeadingZeros={true} 
+                        allowNegative={false} 
+                        displayType={'input'}
+                        isNumericString={true}
+                        allowEmptyFormatting={true}
+                        onValueChange={val => formik.setFieldValue('discount', val.floatValue)}
+                        suffix={'%'}
+                    />
+                </div>
+                {formik.errors.discount && <div className="form__input__error">{formik.errors.discount}</div>}
+
+                <div className={formik.errors.discount_start || formik.errors.discount_end ? "form__input__group error" : "form__input__group"}>
+                    <input 
+                        name="discount_start"
+                        id="discount_start"
+                        type="date" 
+                        value={formik.values.discount_start}
+                        onChange={formik.handleChange}
+                        autoComplete="off"
+                    />
+                    <input 
+                        name="discount_end"
+                        id="discount_end"
+                        type="date" 
+                        value={formik.values.discount_end}
+                        onChange={formik.handleChange}
+                        autoComplete="off"
+                    />
+                </div>
+                {formik.errors.discount_start && <div className="form__input__error">{formik.errors.discount_start}</div>}
+                {formik.errors.discount_end && <div className="form__input__error">{formik.errors.discount_end}</div>}
 
                 <span>Immagini</span>
                 <div className={formik.errors.img ? "form__input__group error" : "form__input__group"}>
@@ -144,7 +199,6 @@ export default function AddProduct() {
                         id="img"
                         type="file" 
                         placeholder="Nome prodotto"
-                        onBlur={formik.handleBlur}
                         onChange={e => addImage(e.currentTarget.files[0])}
                         autoComplete="off"
                         accept=".png, .jpg, .jpeg"
@@ -155,7 +209,7 @@ export default function AddProduct() {
 
                 {images.length > 0 && <ProductViewer images={images} imgContainer={imgContainer || images[0]} setImgContainer={setImgContainer} deleteImage={deleteImage} />}
 
-                <button className="form__button" type="submit" disabled={!formik.dirty || formik.isSubmitting}>Pubblica</button>
+                <button className="form__button" type="submit" disabled={!formik.dirty/* || formik.isSubmitting*/}>Pubblica</button>
             </form>
         </div>
     );

@@ -12,7 +12,7 @@ const passport = require('passport');
 require('../passport')(passport);
 
 ProductsRouter.post('/retrieve', async function(req, res) {
-    let data = await ProductModel.find().populate('images').populate('owner');
+    var data = await ProductModel.find().populate('images').populate('owner');
     res.json(data);
 })
 
@@ -62,8 +62,12 @@ ProductsRouter.post('/add', passport.authenticate('user', { session: false }), f
             price: fields.price,
             units: fields.units,
             owner: owner,
-            images: images
-        })
+            images: images,
+            discount: fields.discount,
+            discount_start: (fields.discount >= 5) ? fields.discount_start : null,
+            discount_end: (fields.discount >= 5) ? fields.discount_end : null
+        });
+
         product.save();
         res.json(product);
     });

@@ -78,11 +78,10 @@
     border-radius: 5px;
     margin: 10px;
     padding: 5px;
-    width: 350px;
+    width: 400px;
 }
 
 .product__card img {
-    display: flex;
     max-width: 150px;
     max-height: 150px;
     object-fit: contain;
@@ -99,13 +98,23 @@
     border-radius: 5px;
 }
 
+.product__card__discount {
+    font-size: 10px;
+}
+
+.product__card__price.strike {
+    text-decoration: line-through;
+}
+
+.product__card__price.strong {
+    font-weight: bold;
+}
+
 .product__card__info {
     display: flex;
     flex-direction: column;
     flex: 1;
     font-size: 13px;
-    align-items: center;
-    justify-content: center;
 }
 
 .product__card__info span {

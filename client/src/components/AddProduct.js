@@ -3,14 +3,13 @@ import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { axios } from '../core/axios';
+import NumberFormat from 'react-number-format';
 
 import TitleIcon from '@material-ui/icons/Title';
 import EuroIcon from '@material-ui/icons/Euro';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 
 import ProductViewer from './ProductViewer';
-
-import NumberFormat from 'react-number-format';
 
 import './css/Form.css';
 import './css/AddProduct.css';
@@ -36,11 +35,16 @@ const ProductSchema = yup.object().shape({
         .min(5, "Lo sconto dev'essere di almeno del 5%")
         .max(75, "Lo sconto può essere al massimo del 75%"),
     price: yup.number()
+        .required("Inserisci un prezzo per il prodotto.")
         .min(1, "Il prezzo non può essere inferiore a 1.")
         .max(10000, "Il prezzo non può essere maggiore a 10.000,00 €"),
+    units: yup.number()
+        .required("Inserisci il numero di unità disponibili per la vendita.")
+        .min(1, "Devi avere almeno un'unità del prodotto."),
     title: yup.string()
         .required("Inserisci un nome prodotto.")
-        .min(5, "Il titolo dev'essere lungo almeno 5 caratteri."),
+        .min(5, "Il titolo dev'essere lungo almeno 5 caratteri.")
+        .max(20, "Il titolo può contenere al massimo 20 caratteri"),
     img: yup.mixed() 
         .required("Inserisci almeno una foto.")
         .test('fileSize', "File troppo grande. (max 200 kb)", value => value.size <= FILE_SIZE) 

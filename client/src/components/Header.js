@@ -21,6 +21,7 @@ export default function Header() {
     const chart = useSelector(getCount);
     const dispatch = useDispatch();
     const history = useHistory();
+    
     const [dropdown, showDropdown] = useState(false);
     const [foundedProducts, setFoundedProducts] = useState([]);
 
@@ -64,8 +65,8 @@ export default function Header() {
                             {foundedProducts.map(
                                 (x, i) => 
                                 <li key={i}>
-                                    <Link to="/add" key={i}>
-                                        {x.title} di <strong>{x.owner.firstname} {x.owner.lastname}</strong>
+                                    <Link to={`/product/${x._id}`} key={i}>
+                                        {x.title}
                                     </Link>
                                 </li>
                             )}

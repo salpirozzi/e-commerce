@@ -11,8 +11,21 @@ const ProductModel = require('../models/Products.model');
 const passport = require('passport');
 require('../passport')(passport);
 
+const applyDiscount = (x) => {
+    let start = new Date(x.discount_start).valueOf();
+    let end = new Date(x.discount_end).valueOf();
+    let today = new Date().valueOf();
+    if(today >= start && today <= end) {
+        x["discounted"] = true;
+        x["discounted_price"] = x.price - (x.price * x.discount / 100);                 
+    }
+    return x;
+}
+
 ProductsRouter.post('/retrieve', async function(req, res) {
     var data = await ProductModel.find().populate('images').populate('owner');
+    data = data.map(x => x.toObject());
+    data.filter(x => x.discount >= 5).map(x => applyDiscount(x));
     res.json(data);
 })
 
@@ -21,7 +34,7 @@ ProductsRouter.post('/search', function(req, res) {
 
     form.parse(req, async(err, fields, files) => {
         if(err != null)return res.status(422).json(err);
-        let data = await ProductModel.find({ title: {$regex: fields.name, $options: 'i'} }).limit(10).populate('images').populate('owner');
+        let data = await ProductModel.find({ title: {$regex: fields.name, $options: 'i'} }).limit(10).select('title');
         res.json(data);
     });
 })
@@ -31,7 +44,9 @@ ProductsRouter.post('/get', function(req, res) {
 
     form.parse(req, async(err, fields, files) => {
         if(err != null)return res.status(422).json(err);
-        let data = await ProductModel.findbyId(fields.id).populate('images').populate('owner');
+        let data = await ProductModel.findById(fields.id).populate('images').populate('owner');
+        data = data.toObject();
+        if(data.discount >= 5) applyDiscount(data);
         res.json(data);
     });
 })

@@ -31,8 +31,9 @@ export default function App() {
             const current_time = Date.now() / 1000; 
 
             if(decoded.exp < current_time) return dispatch(logout());
-            dispatch(update(id)).then(() => setLoaded(true))
+            dispatch(update(id));
         }
+        setLoaded(true);
     }, [user, dispatch]);
 
     return (

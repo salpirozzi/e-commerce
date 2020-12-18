@@ -3,6 +3,7 @@
 * {
   box-sizing: border-box;
   font-family: "Amazon Ember", Arial, sans-serif;
+  z-index: 1;
 }
 
 svg {

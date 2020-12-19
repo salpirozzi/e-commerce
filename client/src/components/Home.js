@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { add } from '../reducers/chartSlice';
 
 import './css/AddProduct.css';
+import Banner from './images/Banner.jpg';
 
 export default function Home() {
     const [products, setProducts] = useState([]);
@@ -26,7 +27,7 @@ export default function Home() {
     return (
         <React.Fragment>
             <div className="products__sidebar">
-                <img src="https://images-eu.ssl-images-amazon.com/images/G/29/EU-Customer-engagement/WelcomePageNewDesktop/1-Col-LG_PrimeBanner_IT_1500x500_UPDATE.jpg" alt="Sidebar" />
+                <img src={Banner} alt="Sidebar" />
             </div>
             <div className="products__container">
                 {products.length > 0 && products.map(

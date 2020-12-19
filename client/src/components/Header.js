@@ -15,6 +15,7 @@ import { getCount } from '../reducers/chartSlice';
 import { toast } from 'react-toastify';
 
 import './css/Header.css';
+import Logo from './images/Logo.png';
 
 export default function Header() {
     const user = useSelector(getUser);
@@ -49,7 +50,7 @@ export default function Header() {
             <div className="header__left">
                 <MenuIcon />
                 <Link to="/">
-                    <img src="https://upload.wikimedia.org/wikipedia/donate/thumb/f/fd/Amazon-logo-white.svg/1200px-Amazon-logo-white.svg.png" alt="Logo" />
+                    <img src={Logo} alt="Logo" />
                 </Link>
             </div>
             <div className="header__center">

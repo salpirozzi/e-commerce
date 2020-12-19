@@ -140,6 +140,7 @@ export default function AddProduct() {
         initialValues: {img: null},
         validationSchema: ImageSchema,
         validateOnChange: false,
+        validateOnBlur: false,
         onSubmit: () => onSubmit()       
     });
 
@@ -176,8 +177,8 @@ export default function AddProduct() {
                             placeholder="Nome prodotto"
                             value={stepOne.values.title}
                             onChange={stepOne.handleChange}
-                            autoComplete="off"
                             onBlur={stepOne.handleBlur}
+                            autoComplete="off"
                         />
                     </div>
                     {stepOne.errors.title && stepOne.touched.title && <div className="form__input__error">{stepOne.errors.title}</div>}
@@ -229,8 +230,8 @@ export default function AddProduct() {
                             placeholder="Unità disponibili"
                             value={stepOne.values.units}
                             onChange={stepOne.handleChange}
-                            min={1}
                             onBlur={stepOne.handleBlur}
+                            min={1}
                         />
                     </div>
                     {stepOne.errors.price && stepOne.touched.price && <div className="form__input__error">{stepOne.errors.price}</div>}

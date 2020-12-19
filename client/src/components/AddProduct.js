@@ -29,6 +29,9 @@ const ImageSchema = yup.object().shape({
 })
 
 const DiscountSchema =  yup.object().shape({
+    discount: yup.number()
+        .min(5, "Lo sconto dev'essere di almeno del 5%")
+        .max(75, "Lo sconto può essere al massimo del 75%"),
     discount_start: yup.date() 
         .min(MIN_DATE, "Non puoi inserire una data precedente a quella di oggi."),
     discount_end: yup.date()
@@ -43,9 +46,6 @@ const DiscountSchema =  yup.object().shape({
 const ProductSchema = yup.object().shape({
     category: yup.string()
         .required("Scegli una categoria."),
-    discount: yup.number()
-        .min(5, "Lo sconto dev'essere di almeno del 5%")
-        .max(75, "Lo sconto può essere al massimo del 75%"),
     price: yup.number()
         .required("Inserisci un prezzo per il prodotto.")
         .min(1, "Il prezzo non può essere inferiore a 1.")
@@ -127,16 +127,14 @@ export default function AddProduct() {
         validationSchema: ProductSchema,
         onSubmit: () => setStep(2)
     });
-
     const stepTwo = useFormik({
         initialValues: {
-            discount: 0, 
+            discount: "", 
             discount_start: "", 
             discount_end: ""
         },
         validationSchema: DiscountSchema,
-        validateOnChange: false,
-        onSubmit: () => setStep(3)  
+        onSubmit: () => setStep(3)
     });
     const stepThree = useFormik({
         initialValues: {img: null},
@@ -231,7 +229,6 @@ export default function AddProduct() {
                             placeholder="Unità disponibili"
                             value={stepOne.values.units}
                             onChange={stepOne.handleChange}
-                            autoComplete="off"
                             min={1}
                             onBlur={stepOne.handleBlur}
                         />
@@ -248,17 +245,13 @@ export default function AddProduct() {
 
                     <span>Sconto programmato</span>
                     <div className={stepTwo.errors.discount && stepTwo.touched.discount ? "form__input__group error" : "form__input__group"}>
-                        <NumberFormat 
-                            id="discount"
+                        <input 
                             name="discount"
+                            id="discount"
                             value={stepTwo.values.discount} 
-                            allowLeadingZeros={false} 
-                            allowNegative={false} 
-                            displayType={'input'}
-                            isNumericString={true}
-                            allowEmptyFormatting={true}
-                            onValueChange={val => stepTwo.setFieldValue('discount', val.floatValue)}
-                            suffix={'%'}
+                            placeholder="Percentuale di sconto"
+                            type="number"
+                            onChange={stepTwo.handleChange}
                             onBlur={stepTwo.handleBlur}
                         />
                     </div>

@@ -24,16 +24,19 @@ export default function App() {
 
     useEffect(() => {
         let token = localStorage.token;
-        if(token && user === null)
-        {
-            let decoded = jwt_decode(token);
-            const id = decoded.id;
-            const current_time = Date.now() / 1000; 
+        async function checkUser() {
+            if(token && user === null)
+            { 
+                const decoded = jwt_decode(token);
+                const id = decoded.id;
+                const current_time = Date.now() / 1000; 
 
-            if(decoded.exp < current_time) return dispatch(logout());
-            dispatch(update(id));
+                if(decoded.exp < current_time) return dispatch(logout());
+                await dispatch(update(id));
+            }
+            setLoaded(true);
         }
-        setLoaded(true);
+        checkUser();
     }, [user, dispatch]);
 
     return (

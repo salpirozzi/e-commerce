@@ -55,7 +55,6 @@ const ProductSchema = yup.object().shape({
     title: yup.string()
         .required("Inserisci un nome prodotto.")
         .min(5, "Il titolo dev'essere lungo almeno 5 caratteri.")
-        .max(20, "Il titolo può contenere al massimo 20 caratteri")
 });
 
 export default function AddProduct() {

@@ -21,10 +21,6 @@
     background-color: #F1F1F1;
 }
 
-.product__column h1 {
-    margin-bottom: 0px;
-}
-
 .product__column__details {
     font-size: 10px;
     margin-bottom: 10px;
@@ -45,7 +41,3 @@
 }
 
 /* Proprietà presenti in Slider.css */
-
-.product__slider { justify-content: left; }
-.product__slider__images { margin-left: 2px; flex: 0.1; }
-.product__slider__container > img { width: 450px; height: 300px; }

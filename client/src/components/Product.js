@@ -36,7 +36,7 @@ export default function Product() {
                         <ProductViewer images={product.images} imgContainer={imgContainer || product.images[0]} setImgContainer={setImgContainer} deleteImage={null} />
                     </div>
                     <div className="product__column">
-                        <h1>{product.title}</h1>
+                        <h3>{product.title}</h3>
                         <span className="product__column__details">
                             <p>Prodotto di <strong>{product.owner.firstname} {product.owner.lastname}</strong></p>
                             <p>Pubblicato nella categoria <strong>{categoryList[product.category]}</strong></p>

@@ -22,5 +22,6 @@ export const chartSlice = createSlice({
 export const { add, remove } = chartSlice.actions;
 
 export const getCount = state => state.chart.items_count;
+export const getItems = state => state.chart.items;
 
 export default chartSlice.reducer;

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import ReactImageMagnify from 'react-image-magnify';
 import DeleteIcon from '@material-ui/icons/Delete';
 import './css/Slider.css';
 
@@ -25,8 +26,21 @@ export default function ProductViewer({ images, imgContainer, setImgContainer, d
                         <DeleteIcon />
                     </button>
                 </span>}
-
-                <img src={imgContainer.url} alt="Foto" />
+                <ReactImageMagnify {...{
+                    smallImage: {
+                        alt: 'Immagine',
+                        isFluidWidth: false,
+                        width: (deleteImage !== null) ? 300 : 400,
+                        height: (deleteImage !== null) ? 400 : 500,
+                        src: imgContainer.url,
+                    },
+                    largeImage: {
+                        src: imgContainer.url,
+                        width: 800,
+                        height: 1000
+                    },
+                    enlargedImagePosition: 'over'
+                }} />
             </div>
         </div>
     )

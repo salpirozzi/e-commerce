@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { axios } from '../core/axios';
 import NumberFormat from 'react-number-format';
 
-import { useDispatch } from 'react-redux';
-import { add } from '../reducers/chartSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { add, getItems } from '../reducers/chartSlice';
 
 import './css/Home.css';
 import Banner from './images/Banner.jpg';
@@ -12,6 +12,8 @@ import Banner from './images/Banner.jpg';
 export default function Home() {
     const [products, setProducts] = useState([]);
     const dispatch = useDispatch();
+    const items = useSelector(getItems);
+    const hasItem = (id) => items.includes(id);
     const date_options = {
         weekday: 'long', 
         year: 'numeric', 
@@ -33,12 +35,13 @@ export default function Home() {
             <div className="products__container">
                 {products.length > 0 && products.map(
                     (x, i) => {
+                        let title = x.title.slice(0, 20) + "...";
                         return ( 
                             <div className="product__card" key={i}>
                                 <img src={x.images[0].url} alt="Prodotto" key={i} />
                                 <div className="product__card__info">
                                     <h1>
-                                        <Link to={"/product/" + x._id}>{x.title}</Link>
+                                        <Link to={"/product/" + x._id}>{title}</Link>
                                     </h1>
                                     <span>Venduto da: <strong>{x.owner.firstname} {x.owner.lastname}</strong></span>
                                     <span>
@@ -86,10 +89,12 @@ export default function Home() {
                                         min={1}
                                         placeholder="Q.tà"
                                         className="product__card__quantity"
+                                        disabled={hasItem(x._id)}
                                     />
                                     <button 
                                         type="button" 
                                         onClick={() => dispatch(add(x._id))}
+                                        disabled={hasItem(x._id)}
                                     >
                                         Aggiungi al carrello
                                     </button>

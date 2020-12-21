@@ -1,0 +1,51 @@
+.product__slider {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    object-fit: fill;
+    margin-bottom: 20px;
+}
+
+.product__slider__container {
+    position: relative;
+}
+
+.product__slider__container__remove {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.product__slider__container__remove button {
+    background-color: transparent;
+    border: none;
+}
+
+.product__slider__container > img {
+    width: 20vw;
+    height: 40vh;
+    object-fit: contain;
+}
+
+.product__slider__images {
+    display: flex;
+    flex: 0.2;
+    background-color: white;
+    flex-direction: column;
+}
+
+.product__slider__images img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.product__slider__images button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.product__slider__images button:hover {
+    border: 2px solid orange;
+}

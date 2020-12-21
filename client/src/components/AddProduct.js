@@ -13,7 +13,6 @@ import ProductViewer from './ProductViewer';
 import { categoryList } from './useful/Categories';
 
 import './css/Form.css';
-import './css/AddProduct.css';
 
 import { toast } from 'react-toastify';
 

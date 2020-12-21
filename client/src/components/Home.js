@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { axios } from '../core/axios';
 import NumberFormat from 'react-number-format';
 
 import { useDispatch } from 'react-redux';
 import { add } from '../reducers/chartSlice';
 
-import './css/AddProduct.css';
+import './css/Home.css';
 import Banner from './images/Banner.jpg';
 
 export default function Home() {
@@ -26,19 +27,19 @@ export default function Home() {
 
     return (
         <React.Fragment>
-            <div className="products__sidebar">
+            <div className="home__background">
                 <img src={Banner} alt="Sidebar" />
             </div>
             <div className="products__container">
                 {products.length > 0 && products.map(
                     (x, i) => {
-                        let img = x.images[0].data;
-                        let type = x.images[0].type;
                         return ( 
                             <div className="product__card" key={i}>
-                                <img src={`data:${type};base64,${img}`} alt="Prodotto" key={i} />
+                                <img src={x.images[0].url} alt="Prodotto" key={i} />
                                 <div className="product__card__info">
-                                    <h1>{x.title}</h1>
+                                    <h1>
+                                        <Link to={"/product/" + x._id}>{x.title}</Link>
+                                    </h1>
                                     <span>Venduto da: <strong>{x.owner.firstname} {x.owner.lastname}</strong></span>
                                     <span>
                                         Prezzo:

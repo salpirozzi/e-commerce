@@ -51,6 +51,7 @@ export default function Header() {
                 <MenuIcon />
                 <Link to="/">
                     <img src={Logo} alt="Logo" />
+                    <span className="header__left__dot">.it</span>
                 </Link>
             </div>
             <div className="header__center">

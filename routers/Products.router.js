@@ -22,10 +22,26 @@ const applyDiscount = (x) => {
     return x;
 }
 
+const generateImage = (data) => {
+    data.images.map(x => {
+        let url = x.data.toString('base64');
+        x['url'] = `data:${x.type};base64,${url}`;
+        delete x.data;
+        delete x.type;
+        delete x._id;
+        delete x.__v;
+    });
+    return data;
+}
+
 ProductsRouter.post('/retrieve', async function(req, res) {
     var data = await ProductModel.find().populate('images').populate('owner');
-    data = data.map(x => x.toObject());
-    data.filter(x => x.discount >= 5).map(x => applyDiscount(x));
+    data = data.map(x => {
+        x = x.toObject();
+        generateImage(x); 
+        if(x.discount >= 5) applyDiscount(x);
+        return x;
+    });
     res.json(data);
 })
 
@@ -47,6 +63,7 @@ ProductsRouter.post('/get', function(req, res) {
         let data = await ProductModel.findById(fields.id).populate('images').populate('owner');
         data = data.toObject();
         if(data.discount >= 5) applyDiscount(data);
+        generateImage(data);
         res.json(data);
     });
 })
@@ -80,7 +97,8 @@ ProductsRouter.post('/add', passport.authenticate('user', { session: false }), f
             images: images,
             discount: fields.discount,
             discount_start: (fields.discount >= 5) ? fields.discount_start : null,
-            discount_end: (fields.discount >= 5) ? fields.discount_end : null
+            discount_end: (fields.discount >= 5) ? fields.discount_end : null,
+            category: fields.category
         });
 
         product.save();

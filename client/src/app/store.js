@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+
 import userReducer from '../reducers/userSlice';
 import chartReducer from '../reducers/chartSlice';
 

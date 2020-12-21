@@ -1,0 +1,51 @@
+.product__container {
+    margin-top: 30px;
+    display: flex;
+}
+
+.product__container__button {
+    position: absolute;
+    bottom: 0;
+}
+
+.product__gallery,
+.product__column {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 0.4;
+}
+
+.product__column {
+    padding: 10px;
+    background-color: #F1F1F1;
+}
+
+.product__column h1 {
+    margin-bottom: 0px;
+}
+
+.product__column__details {
+    font-size: 10px;
+    margin-bottom: 10px;
+}
+
+.product__column__details p {
+    margin: 0;
+}
+
+.product__column__separator {
+    border: 0;
+    clear: both;
+    display: block;
+    width: 100%;               
+    background-color: orange;
+    height: 1px;
+    margin-bottom: 10px;
+}
+
+/* Proprietà presenti in Slider.css */
+
+.product__slider { justify-content: left; }
+.product__slider__images { margin-left: 2px; flex: 0.1; }
+.product__slider__container > img { width: 450px; height: 300px; }

@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 
-import Header from './components/Header';
-import Login from './components/Login';
-import Register from './components/Register';
-import AddProduct from './components/AddProduct';
-import Home from './components/Home';
+import Header from './Header';
+import Login from './Login';
+import Register from './Register';
+import AddProduct from './AddProduct';
+import Home from './Home';
+import Product from './Product';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { getUser, update, logout } from './reducers/userSlice';
-import { PublicRoute, UserRoute } from './components/routers-rules';
+import { getUser, update, logout } from '../reducers/userSlice';
+import { PublicRoute, UserRoute } from './routers-rules';
 
-import './App.css';
+import './css/App.css';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -31,7 +32,7 @@ export default function App() {
                 const id = decoded.id;
                 const current_time = Date.now() / 1000; 
 
-                if(decoded.exp < current_time) return dispatch(logout());
+                if(decoded.exp < current_time) return await dispatch(logout());
                 await dispatch(update(id));
             }
             setLoaded(true);
@@ -48,13 +49,18 @@ export default function App() {
                     newestOnTop={true}
                     draggable={true}
                 />
-                <Header />
-                {loaded === true && <Switch>
-                    <Route exact path="/" component={Home} />
-                    <PublicRoute exact path='/login' component={Login} />
-                    <PublicRoute exact path='/register' component={Register} />
-                    <UserRoute exact path='/add' component={AddProduct} />
-                </Switch>}
+                {loaded === true && 
+                    <React.Fragment>
+                        <Header />
+                        <Switch>
+                            <Route exact path="/" component={Home} />
+                            <Route exact path="/product/:id" component={Product} />
+                            <PublicRoute exact path='/login' component={Login} />
+                            <PublicRoute exact path='/register' component={Register} />
+                            <UserRoute exact path='/add' component={AddProduct} />
+                        </Switch>
+                    </React.Fragment>
+                }
             </div>
         </Router>
     );

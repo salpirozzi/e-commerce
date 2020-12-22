@@ -8,13 +8,15 @@ export const chartSlice = createSlice({
     },
     reducers: {
         remove: (state, action) => {
-            let index = state.items.findIndex(x => x._id === action.payload);
+            let index = state.items.findIndex(x => x.item === action.payload);
             state.items.splice(index, 1);
             state.items_count--;
         },
         add: (state, action) => {
-            state.items.push(action.payload);
-            state.items_count++;
+            let index = state.items.findIndex(x => x.item === action.payload.item);
+            if(index !== -1) state.items[index].amount += action.payload.amount;
+            else state.items.push(action.payload);
+            state.items_count += action.payload.amount;
         }
     }
 });

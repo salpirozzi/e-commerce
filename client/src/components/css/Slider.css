@@ -9,6 +9,13 @@
     position: relative;
 }
 
+.product__slider__container img {
+    width: 20vw;
+    height: 40vh;
+    object-fit: contain;
+    background-color: white;
+}
+
 .product__slider__container__remove {
     position: absolute;
     right: 0;
@@ -18,12 +25,6 @@
 .product__slider__container__remove button {
     background-color: transparent;
     border: none;
-}
-
-.product__slider__container > img {
-    width: 20vw;
-    height: 40vh;
-    object-fit: contain;
 }
 
 .product__slider__images {
@@ -47,4 +48,16 @@
 
 .product__slider__images button:hover {
     border: 2px solid orange;
+}
+
+.product__slider__figure {
+    width: 20vw;
+    height: 40vh;
+    object-fit: contain;
+    padding: 0;
+    border: none;
+}
+  
+.product__slider__figure:hover img {
+    opacity: 0;
 }

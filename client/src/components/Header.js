@@ -67,8 +67,8 @@ export default function Header() {
                             {foundedProducts.map(
                                 (x, i) => 
                                 <li key={i}>
-                                    <Link to={`/product/${x._id}`} key={i}>
-                                        {x.title}
+                                    <Link to={`/product/${x._id}`} onClick={() => setFoundedProducts([])} key={i}>
+                                        {x.title.slice(0, 30) + "..."}
                                     </Link>
                                 </li>
                             )}

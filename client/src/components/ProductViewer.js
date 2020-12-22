@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import ReactImageMagnify from 'react-image-magnify';
 import DeleteIcon from '@material-ui/icons/Delete';
 import './css/Slider.css';
 
 export default function ProductViewer({ images, imgContainer, setImgContainer, deleteImage }) {
-    
+
+    const [bgPosition, setBgPosition] = useState('0% 0%');
+    const zoomImage = (e) => {
+        const { left, top, width, height } = e.target.getBoundingClientRect();
+        const x = (e.pageX - left) / width * 100;
+        const y = (e.pageY - top) / height * 100;
+        setBgPosition(`${x}% ${y}%`);
+    }
+
     return (
         <div className="product__slider">
             <div className="product__slider__images">
@@ -26,21 +33,9 @@ export default function ProductViewer({ images, imgContainer, setImgContainer, d
                         <DeleteIcon />
                     </button>
                 </span>}
-                <ReactImageMagnify {...{
-                    smallImage: {
-                        alt: 'Immagine',
-                        isFluidWidth: false,
-                        width: (deleteImage !== null) ? 300 : 400,
-                        height: (deleteImage !== null) ? 400 : 500,
-                        src: imgContainer.url,
-                    },
-                    largeImage: {
-                        src: imgContainer.url,
-                        width: 800,
-                        height: 1000
-                    },
-                    enlargedImagePosition: 'over'
-                }} />
+                <figure className="product__slider__figure" onMouseMove={zoomImage} style={{'background-image': `url(${imgContainer.url})`, 'background-position': bgPosition}}>
+                    <img src={imgContainer.url} alt="Immagine" />
+                </figure>
             </div>
         </div>
     )

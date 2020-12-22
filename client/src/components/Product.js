@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { axios } from '../core/axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import NumberFormat from 'react-number-format';
 
-import { add } from '../reducers/chartSlice';
+import { add, getItems } from '../reducers/chartSlice';
 import ProductViewer from './ProductViewer';
 import { categoryList } from './useful/Categories';
 
@@ -13,8 +13,12 @@ import './css/Product.css';
 export default function Product() {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
+    const [quantity, setQuantity] = useState(1);
     const [imgContainer, setImgContainer] = useState();
     const dispatch = useDispatch();
+    const items = useSelector(getItems);
+    const hasItem = (id) => items.findIndex(x => x.item === id);
+
     const date_options = {
         weekday: 'long', 
         year: 'numeric', 
@@ -79,14 +83,33 @@ export default function Product() {
                             }
                         </span>
                         <div className="product__container__button">
-                            <input 
+                            <select 
                                 type="number"
                                 min={1}
                                 placeholder="Q.tà"
-                            />
+                                onChange={(e) => setQuantity(e.currentTarget.value)}
+                                disabled={hasItem(product._id) !== -1}
+                            >
+                                <option value={1}>1</option>
+                                <option value={2}>2</option>
+                                <option value={3}>3</option>
+                                <option value={4}>4</option>
+                                <option value={5}>5</option>
+                                <option value={6}>6</option>
+                                <option value={7}>7</option>
+                                <option value={8}>8</option>
+                                <option value={9}>9</option>
+                                <option value={10}>10</option>
+                            </select>
                             <button 
                                 type="button" 
-                                onClick={() => dispatch(add(product._id))}
+                                onClick={() => dispatch(
+                                    add({
+                                        item: product._id, 
+                                        amount: parseInt(quantity)
+                                    })
+                                )}
+                                disabled={hasItem(product._id) !== -1}
                             >
                                 Aggiungi al carrello
                             </button>

@@ -5,6 +5,10 @@ import * as yup from 'yup';
 import { axios } from '../core/axios';
 import NumberFormat from 'react-number-format';
 
+import { EditorState, convertToRaw } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html';
+
 import TitleIcon from '@material-ui/icons/Title';
 import EuroIcon from '@material-ui/icons/Euro';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
@@ -13,6 +17,7 @@ import ProductViewer from './ProductViewer';
 import { categoryList } from './useful/Categories';
 
 import './css/Form.css';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import { toast } from 'react-toastify';
 
@@ -43,8 +48,9 @@ const DiscountSchema =  yup.object().shape({
 })
 
 const ProductSchema = yup.object().shape({
-    category: yup.string()
-        .required("Scegli una categoria."),
+    category: yup.number()
+        .required("Scegli una categoria.")
+        .min(1, "Il prodotto deve appartenere ad una categoria."),
     price: yup.number()
         .required("Inserisci un prezzo per il prodotto.")
         .min(1, "Il prezzo non può essere inferiore a 1.")
@@ -61,11 +67,17 @@ export default function AddProduct() {
 
     const [images, uploadImage] = useState([]);
     const [imgContainer, setImgContainer] = useState();
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const history = useHistory();
 
     const steps = [1, 2, 3];
     const [step, setStep] = useState(1);
 
+    const updateEditor = (editorState) => {
+        setEditorState(editorState);
+        let descriptionRow = convertToRaw(editorState.getCurrentContent());
+        stepOne.setFieldValue('description', draftToHtml(descriptionRow));
+    }
     const deleteImage = () => {
         let index = images.indexOf(imgContainer);
         images.splice(index, 1);
@@ -94,6 +106,7 @@ export default function AddProduct() {
     }
     const onSubmit = () => {
         let data = new FormData();
+        let descriptionRow = convertToRaw(stepOne.values.description);
 
         images.map((x, i) => data.append(i, x.file));
         data.append("title", stepOne.values.title);
@@ -103,6 +116,7 @@ export default function AddProduct() {
         data.append("discount_start", stepTwo.values.discount_start);
         data.append("discount_end", stepTwo.values.discount_end);
         data.append("category", stepOne.values.category);
+        data.append("description", draftToHtml(descriptionRow));
 
         axios.post("/products/add", data)
             .then(() => {
@@ -120,7 +134,8 @@ export default function AddProduct() {
             price: 0, 
             units: 1, 
             img: null, 
-            category: ""
+            category: "",
+            description: ""
         },
         validationSchema: ProductSchema,
         onSubmit: () => setStep(2)
@@ -165,7 +180,7 @@ export default function AddProduct() {
             {step === 1 &&
                 <form onSubmit={stepOne.handleSubmit}>
 
-                    <span>Nome</span>
+                    <span className="form__container__title">Nome</span>
                     <div className={stepOne.errors.title && stepOne.touched.title ? "form__input__group error" : "form__input__group"}>
                         <TitleIcon />
                         <input 
@@ -181,7 +196,7 @@ export default function AddProduct() {
                     </div>
                     {stepOne.errors.title && stepOne.touched.title && <div className="form__input__error">{stepOne.errors.title}</div>}
 
-                    <span>Categoria</span>
+                    <span className="form__container__title">Categoria</span>
                     <div className={stepOne.errors.category && stepOne.touched.category ? "form__input__group error" : "form__input__group"}>
                         <select 
                             name="category"
@@ -201,7 +216,7 @@ export default function AddProduct() {
                     </div>
                     {stepOne.errors.category && stepOne.touched.category && <div className="form__input__error">{stepOne.errors.category}</div>}
 
-                    <span>Prezzo e unità</span>
+                    <span className="form__container__title">Prezzo e unità</span>
                     <div className={(stepOne.errors.price && stepOne.touched.price) || (stepOne.errors.units && stepOne.touched.units) ? "form__input__group error" : "form__input__group"}>
                         <EuroIcon />
                         <NumberFormat 
@@ -235,6 +250,21 @@ export default function AddProduct() {
                     {stepOne.errors.price && stepOne.touched.price && <div className="form__input__error">{stepOne.errors.price}</div>}
                     {stepOne.errors.units && stepOne.touched.units && <div className="form__input__error">{stepOne.errors.units}</div>}
 
+                    <span className="form__container__title">Descrizione</span>
+                    <div>
+                        <Editor
+                            id="description"
+                            name="description"
+                            value={stepOne.values.description}
+                            editorState={editorState}
+                            wrapperClassName={stepOne.errors.description && stepOne.touched.description ? "form__editor__wrapper error" : "form__editor__wrapper"}
+                            editorClassName={"form__editor__content"}
+                            onEditorStateChange={(editorState) => updateEditor(editorState)}
+                            onBlur={stepOne.handleBlur}
+                        />
+                        {stepOne.errors.description && stepOne.touched.description && <div className="form__input__error">{stepOne.errors.description}</div>}
+                    </div>
+
                     <button className="form__button" type="submit" disabled={!(stepOne.isValid && stepOne.dirty)}>Continua</button>
                 </form>
             }
@@ -242,7 +272,7 @@ export default function AddProduct() {
             {step === 2 &&
                 <form onSubmit={stepTwo.handleSubmit}>
 
-                    <span>Sconto programmato</span>
+                    <span className="form__container__title">Sconto programmato</span>
                     <div className={stepTwo.errors.discount && stepTwo.touched.discount ? "form__input__group error" : "form__input__group"}>
                         <input 
                             name="discount"
@@ -283,7 +313,7 @@ export default function AddProduct() {
 
             {step > 2 &&
                 <form onSubmit={stepThree.handleSubmit}>
-                    <span>Immagini</span>
+                    <span className="form__container__title">Immagini</span>
                     <div className={stepThree.errors.img ? "form__input__group error" : "form__input__group"}>
                         <label htmlFor="img">
                             {stepOne.values.img !== null ? stepThree.values.img.name : "Aggiungi un'immagine"}

@@ -8,6 +8,15 @@
     bottom: 0;
 }
 
+.product__container__button button {
+    background-color: rgba(250, 190, 88, 1);
+    border: 1px solid black;
+    padding: 7px;
+    color: black;
+    border-radius: 5px;
+    margin: 5px;
+}
+
 .product__gallery,
 .product__column {
     position: relative;

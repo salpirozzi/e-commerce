@@ -1,6 +1,6 @@
 .form__container {
     display: flex;
-    width: 30vw;
+    width: 50vw;
     margin: 20px auto;
     align-items: center;
     padding: 20px;
@@ -13,7 +13,7 @@
     width: 100%;
 }
 
-.form__container span {
+.form__container__title {
     justify-content: left;
     font-weight: bold;
 }
@@ -114,6 +114,7 @@
     cursor: pointer;
 }
 
+.form__editor__wrapper.error,
 .form__input__group.error {
     border: 1.9px solid red;
     margin-bottom: 0px;
@@ -130,6 +131,20 @@
     align-items: center;
     margin-bottom: 5px;
     text-decoration: none;
+}
+
+.form__editor__wrapper {
+    margin-top: 10px;
+    border: 1.9px solid orange;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+.form__editor__content {
+    border: 1px solid #F1F1F1;
+    margin-bottom: 10px;
+    padding: 5px;
 }
 
 @media screen and (max-width: 600px) {

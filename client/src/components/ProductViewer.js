@@ -18,22 +18,22 @@ export default function ProductViewer({ images, imgContainer, setImgContainer, d
             <div className="product__slider__images">
             {
                 images.map(
-                    (img, i) => {
-                    return (
+                    (img, i) => 
                         <button type="button" onMouseOver={() => setImgContainer(img)} key={i}>
                             <img src={img.url} alt="Foto" key={i} />
                         </button>
-                    )}
                 )
             }
             </div>
             <div className="product__slider__container">
-                {deleteImage !== null && <span className="product__slider__container__remove">
-                    <button type="button" onClick={() => deleteImage()}>
-                        <DeleteIcon />
-                    </button>
-                </span>}
-                <figure className="product__slider__figure" onMouseMove={zoomImage} style={{'background-image': `url(${imgContainer.url})`, 'background-position': bgPosition}}>
+                {deleteImage !== null && 
+                    <span className="product__slider__container__remove">
+                        <button type="button" onClick={() => deleteImage()}>
+                            <DeleteIcon />
+                        </button>
+                    </span>
+                }
+                <figure className="product__slider__figure" onMouseMove={(e) => zoomImage(e)} style={{'background-image': `url(${imgContainer.url})`, 'background-position': bgPosition}}>
                     <img src={imgContainer.url} alt="Immagine" />
                 </figure>
             </div>

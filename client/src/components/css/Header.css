@@ -48,6 +48,7 @@
 }
 
 .header__input__list {
+  z-index: 1;
   position: absolute;
   display: inline-block;
   width: 58.8%;
@@ -167,6 +168,7 @@
   position: relative;
   right: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
 .header__item__dropdown__content {

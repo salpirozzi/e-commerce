@@ -1,3 +1,5 @@
+// /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/
+
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
@@ -16,7 +18,7 @@ import './css/Form.css';
 const RegisterSchema = yup.object().shape({
     name: yup.string()
         .required("Inserisci un nome.")
-        .matches(/^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/, "Inserisci un nome valido."),
+        .matches(/^([A-Z][a-z]{2,})\s([A-Z]([\s']?[A-Za-z])*)$/, "Inserisci un nome valido."),
     email: yup.string()
         .required("Inserisci un'email.")
         .email("Email non valida."),

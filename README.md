@@ -2,7 +2,7 @@ E-commerce è un progetto che ho voluto realizzare per concretizzare le competen
 
 <h1>HomePage (da terminare)</h1>
 
-<a href="https://gyazo.com/882c7622172c5e6d455f5eb95b603b88"><img src="https://i.gyazo.com/882c7622172c5e6d455f5eb95b603b88.png" alt="Image from Gyazo" width="1366"/></a>
+<a href="https://gyazo.com/9ae21fe2c902edfc2b938a862422b8a6"><img src="https://i.gyazo.com/9ae21fe2c902edfc2b938a862422b8a6.png" alt="Image from Gyazo" width="1366"/></a>
 
 <h1>Ricerca dei prodotti istantanea</h1>
 
@@ -10,11 +10,11 @@ E-commerce è un progetto che ho voluto realizzare per concretizzare le competen
 
 <h1>Pagina prodotto</h1>
 
-<a href="https://gyazo.com/1ec2167e95bfab59d43ba007b6f33e4b"><img src="https://i.gyazo.com/1ec2167e95bfab59d43ba007b6f33e4b.png" alt="Image from Gyazo" width="1366"/></a>
+<a href="https://gyazo.com/c943c94fbf58c72cc099f7eccb20e5ba"><img src="https://i.gyazo.com/c943c94fbf58c72cc099f7eccb20e5ba.png" alt="Image from Gyazo" width="1366"/></a>
 
 <h1>Zoom immagine dei prodotti</h1>
 
-<a href="https://gyazo.com/89238fe5b165eb0fb472ad1e90fd0a5a"><img src="https://i.gyazo.com/89238fe5b165eb0fb472ad1e90fd0a5a.gif" alt="Image from Gyazo" width="1176"/></a>
+<a href="https://gyazo.com/8bed5703cc83d41d2a77eed2595293d8"><img src="https://i.gyazo.com/8bed5703cc83d41d2a77eed2595293d8.gif" alt="Image from Gyazo" width="1150"/></a>
 
 <h1>Login</h1>
 

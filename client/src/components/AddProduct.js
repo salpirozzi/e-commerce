@@ -7,7 +7,6 @@ import NumberFormat from 'react-number-format';
 
 import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import draftToHtml from 'draftjs-to-html';
 
 import TitleIcon from '@material-ui/icons/Title';
 import EuroIcon from '@material-ui/icons/Euro';
@@ -60,7 +59,10 @@ const ProductSchema = yup.object().shape({
         .min(1, "Devi avere almeno un'unità del prodotto."),
     title: yup.string()
         .required("Inserisci un nome prodotto.")
-        .min(5, "Il titolo dev'essere lungo almeno 5 caratteri.")
+        .min(5, "Il titolo dev'essere lungo almeno 5 caratteri."),
+    description: yup.string()
+        .required("Inserisci una descrizione.")
+        .min(200, "Devi inserire almeno 200 caratteri per la descrizione.")
 });
 
 export default function AddProduct() {
@@ -69,14 +71,13 @@ export default function AddProduct() {
     const [imgContainer, setImgContainer] = useState();
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const history = useHistory();
-
+    
     const steps = [1, 2, 3];
     const [step, setStep] = useState(1);
 
     const updateEditor = (editorState) => {
         setEditorState(editorState);
-        let descriptionRow = convertToRaw(editorState.getCurrentContent());
-        stepOne.setFieldValue('description', draftToHtml(descriptionRow));
+        stepOne.setFieldValue("description", editorState.getCurrentContent().getPlainText());
     }
     const deleteImage = () => {
         let index = images.indexOf(imgContainer);
@@ -106,7 +107,7 @@ export default function AddProduct() {
     }
     const onSubmit = () => {
         let data = new FormData();
-        let descriptionRow = convertToRaw(stepOne.values.description);
+        let descriptionRow = convertToRaw(editorState.getCurrentContent());
 
         images.map((x, i) => data.append(i, x.file));
         data.append("title", stepOne.values.title);
@@ -116,15 +117,16 @@ export default function AddProduct() {
         data.append("discount_start", stepTwo.values.discount_start);
         data.append("discount_end", stepTwo.values.discount_end);
         data.append("category", stepOne.values.category);
-        data.append("description", draftToHtml(descriptionRow));
+        data.append("description", JSON.stringify(descriptionRow));
 
         axios.post("/products/add", data)
             .then(() => {
                 toast.info("Prodotto pubblicato!");
-                history.push('/');
                 stepOne.resetForm({});
+                stepTwo.resetForm({});
                 stepThree.resetForm({});
                 setStep(3);
+                history.push('/');
             })
             .catch(err => toast.error(err.response.data));
     }
@@ -133,7 +135,6 @@ export default function AddProduct() {
             title: "", 
             price: 0, 
             units: 1, 
-            img: null, 
             category: "",
             description: ""
         },
@@ -253,14 +254,24 @@ export default function AddProduct() {
                     <span className="form__container__title">Descrizione</span>
                     <div>
                         <Editor
-                            id="description"
-                            name="description"
                             value={stepOne.values.description}
                             editorState={editorState}
                             wrapperClassName={stepOne.errors.description && stepOne.touched.description ? "form__editor__wrapper error" : "form__editor__wrapper"}
                             editorClassName={"form__editor__content"}
+                            toolbar={{
+                                inline: { 
+                                    inDropdown: true,
+                                    options: ['bold', 'italic', 'underline', 'strikethrough']
+                                },
+                                fontSize: {options: [11, 12, 14, 16, 18, 24]},
+                                blockType: {options: ['Normal', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code']},
+                                list: {inDropdown: true},
+                                textAlign: {inDropdown: true},
+                                link: {inDropdown: true},
+                                options: ['inline', 'fontSize', 'blockType', 'list', 'textAlign', 'emoji', 'history']
+                            }}
                             onEditorStateChange={(editorState) => updateEditor(editorState)}
-                            onBlur={stepOne.handleBlur}
+                            onBlur={() => stepOne.setFieldTouched("description")}
                         />
                         {stepOne.errors.description && stepOne.touched.description && <div className="form__input__error">{stepOne.errors.description}</div>}
                     </div>
@@ -316,7 +327,7 @@ export default function AddProduct() {
                     <span className="form__container__title">Immagini</span>
                     <div className={stepThree.errors.img ? "form__input__group error" : "form__input__group"}>
                         <label htmlFor="img">
-                            {stepOne.values.img !== null ? stepThree.values.img.name : "Aggiungi un'immagine"}
+                            {stepThree.values.img !== null ? stepThree.values.img.name : "Aggiungi un'immagine"}
                         </label>
                         <input 
                             name="img"
@@ -331,7 +342,7 @@ export default function AddProduct() {
     
                     {images.length > 0 && <ProductViewer images={images} imgContainer={imgContainer || images[0]} setImgContainer={setImgContainer} deleteImage={deleteImage} />}
                 
-                    <button className="form__button" type="submit" disabled={!(stepThree.isValid && stepThree.dirty) || stepThree.isSubmitting}>Pubblica</button>
+                    <button className="form__button" type="submit" disabled={!(stepThree.isValid && stepThree.dirty)/* || stepThree.isSubmitting*/}>Pubblica</button>
                 </form>
             }
         </div>

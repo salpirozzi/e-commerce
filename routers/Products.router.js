@@ -36,12 +36,15 @@ const generateImage = (data) => {
 
 ProductsRouter.post('/retrieve', async function(req, res) {
     var data = await ProductModel.find().populate('images').populate('owner');
+    if(data === null)return res.status(422).json("Nessun prodotto trovato.");
+
     data = data.map(x => {
         x = x.toObject();
         generateImage(x); 
         if(x.discount >= 5) applyDiscount(x);
         return x;
     });
+
     res.json(data);
 })
 
@@ -61,6 +64,7 @@ ProductsRouter.post('/get', function(req, res) {
     form.parse(req, async(err, fields, files) => {
         if(err != null)return res.status(422).json(err);
         let data = await ProductModel.findById(fields.id).populate('images').populate('owner');
+        if(data === null)return res.status(422).json("Prodotto non trovato.");
         data = data.toObject();
         if(data.discount >= 5) applyDiscount(data);
         generateImage(data);
@@ -98,7 +102,8 @@ ProductsRouter.post('/add', passport.authenticate('user', { session: false }), f
             discount: fields.discount,
             discount_start: (fields.discount >= 5) ? fields.discount_start : null,
             discount_end: (fields.discount >= 5) ? fields.discount_end : null,
-            category: fields.category
+            category: fields.category,
+            description: JSON.parse(fields.description)
         });
 
         product.save();

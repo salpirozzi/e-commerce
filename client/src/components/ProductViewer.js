@@ -33,7 +33,7 @@ export default function ProductViewer({ images, imgContainer, setImgContainer, d
                         </button>
                     </span>
                 }
-                <figure className="product__slider__figure" onMouseMove={(e) => zoomImage(e)} style={{'background-image': `url(${imgContainer.url})`, 'background-position': bgPosition}}>
+                <figure className="product__slider__figure" onMouseMove={(e) => zoomImage(e)} style={{'backgroundImage': `url(${imgContainer.url})`, 'backgroundPosition': bgPosition}}>
                     <img src={imgContainer.url} alt="Immagine" />
                 </figure>
             </div>

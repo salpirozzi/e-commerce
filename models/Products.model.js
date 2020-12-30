@@ -10,7 +10,8 @@ const ProductsSchema = mongoose.Schema({
     discount_start: {type: Date, default: null},
     discount_end: {type: Date, default: null},
     created_at: {type: Date, default: Date.now},
-    category: Number
+    category: Number,
+    description: Object
 });
 
 const Product = mongoose.model('product', ProductsSchema);

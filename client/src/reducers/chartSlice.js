@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { axios } from '../core/axios';
 
 export const chartSlice = createSlice({
     name: 'chart',
@@ -14,14 +15,30 @@ export const chartSlice = createSlice({
         },
         add: (state, action) => {
             let index = state.items.findIndex(x => x.item === action.payload.item);
-            if(index !== -1) state.items[index].amount += action.payload.amount;
-            else state.items.push(action.payload);
-            state.items_count += action.payload.amount;
-        }
+            if(index === -1) {
+                axios.post("chart/add", {
+                    owner_id: action.payload.owner,
+                    product: action.payload.item,
+                    amount: action.payload.amount
+                });
+            }
+            //else state.items[index].amount += action.payload.amount;
+            updateChart(state, action);
+        },
+        updateItems: (state, action) => updateChart(state, action)
     }
 });
 
-export const { add, remove } = chartSlice.actions;
+const updateChart = (state, action) => {
+    let index = state.items.findIndex(x => x.item === action.payload.item);
+    if(index === -1) {
+        state.items.push(action.payload.item);
+    }
+    else state.items[index].amount += action.payload.amount;
+    state.items_count += action.payload.amount;
+}
+
+export const { add, remove, updateItems } = chartSlice.actions;
 
 export const getCount = state => state.chart.items_count;
 export const getItems = state => state.chart.items;

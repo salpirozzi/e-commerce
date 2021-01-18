@@ -6,6 +6,7 @@ import NumberFormat from 'react-number-format';
 import draftToHtml from 'draftjs-to-html';
 
 import { add, getItems } from '../reducers/chartSlice';
+import { getUser } from '../reducers/userSlice';
 import ProductViewer from './ProductViewer';
 import { categoryList } from './useful/Categories';
 
@@ -19,6 +20,7 @@ export default function Product() {
     const dispatch = useDispatch();
     const history = useHistory();
     const items = useSelector(getItems);
+    const user = useSelector(getUser);
     const hasItem = (id) => items.findIndex(x => x.item === id);
 
     const date_options = {
@@ -107,7 +109,8 @@ export default function Product() {
                                 onClick={() => dispatch(
                                     add({
                                         item: product._id, 
-                                        amount: parseInt(quantity)
+                                        amount: parseInt(quantity),
+                                        owner: user.id
                                     })
                                 )}
                                 disabled={hasItem(product._id) !== -1}

@@ -4,7 +4,7 @@ const ProductsSchema = mongoose.Schema({
     title: String,
     price: Number,
     units: Number,
-    owner: {type: mongoose.Schema.Types.ObjectId, ref: 'users'},
+    owner: {type: mongoose.Schema.Types.ObjectId, ref: 'user'},
     images: [{ type: mongoose.Schema.Types.ObjectId, ref: 'product_images' }],
     discount: Number,
     discount_start: {type: Date, default: null},

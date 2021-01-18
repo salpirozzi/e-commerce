@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
-import { axios } from '../core/axios';
 
 import Header from './Header';
 import Login from './Login';
@@ -34,20 +33,9 @@ export default function App() {
                 const id = decoded.id;
                 const current_time = Date.now() / 1000; 
 
-                axios.post("/chart/get", { id: id })
-                    .then(res => res.data.forEach(x =>  
-                        dispatch(
-                            updateItems({
-                                owner_id: x.owner_id._id,
-                                amount: x.amount,
-                                item: x.product._id
-                            })
-                        )
-                    ))
-                    .catch(err => console.log(err.response.data));
-
                 if(decoded.exp < current_time) return await dispatch(logout());
                 await dispatch(update(id));
+                await dispatch(updateItems(id));
             }
             setLoaded(true);
         }

@@ -1,5 +1,26 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { axios } from '../core/axios';
+
+export const updateItems = createAsyncThunk(
+    'chart/update',
+    async(user_id, thunkAPI) => {
+        const response = await axios.post('/chart/get', { id: user_id });
+        return response.data;
+    }
+)
+
+export const add = createAsyncThunk(
+    'chart/add',
+    async(data, thunkAPI) => {
+        const response = await axios.post("chart/add", {
+            owner_id: data.owner,
+            product: data.item,
+            amount: data.amount
+        });
+        thunkAPI.dispatch(updateItems(data.owner));
+        return response.data;
+    }
+)
 
 export const chartSlice = createSlice({
     name: 'chart',
@@ -12,33 +33,33 @@ export const chartSlice = createSlice({
             let index = state.items.findIndex(x => x.item === action.payload);
             state.items.splice(index, 1);
             state.items_count--;
-        },
-        add: (state, action) => {
-            let index = state.items.findIndex(x => x.item === action.payload.item);
-            if(index === -1) {
-                axios.post("chart/add", {
-                    owner_id: action.payload.owner,
-                    product: action.payload.item,
-                    amount: action.payload.amount
-                });
-            }
-            //else state.items[index].amount += action.payload.amount;
-            updateChart(state, action);
-        },
-        updateItems: (state, action) => updateChart(state, action)
+        }
+    },
+    extraReducers: {
+        [updateItems.fulfilled]: (state, action) => updateChart(state, action)
     }
 });
 
 const updateChart = (state, action) => {
-    let index = state.items.findIndex(x => x.item === action.payload.item);
-    if(index === -1) {
-        state.items.push(action.payload.item);
-    }
-    else state.items[index].amount += action.payload.amount;
-    state.items_count += action.payload.amount;
+    let amount = 0;
+
+    action.payload.forEach(x =>  {
+        const index = state.items.findIndex(p => p.item._id === x.product._id);
+        if(index === -1) {
+            const obj = {
+                amount: x.amount,
+                item: x.product
+            };
+            state.items.push(obj);
+        }
+        else state.items[index].amount += x.amount;
+        amount += x.amount;
+    });
+    
+    state.items_count = amount;
 }
 
-export const { add, remove, updateItems } = chartSlice.actions;
+export const { remove } = chartSlice.actions;
 
 export const getCount = state => state.chart.items_count;
 export const getItems = state => state.chart.items;

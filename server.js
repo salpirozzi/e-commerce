@@ -11,7 +11,8 @@ const ChartRouter = require('./routers/Chart.router');
 
 mongoose.connect('mongodb://localhost:27017/ecommerce', {
     useNewUrlParser: true, 
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 });
 
 var db = mongoose.connection;

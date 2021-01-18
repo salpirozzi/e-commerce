@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import NumberFormat from 'react-number-format';
 import draftToHtml from 'draftjs-to-html';
 
-import { add, getItems } from '../reducers/chartSlice';
+import { add } from '../reducers/chartSlice';
 import { getUser } from '../reducers/userSlice';
 import ProductViewer from './ProductViewer';
 import { categoryList } from './useful/Categories';
@@ -19,9 +19,7 @@ export default function Product() {
     const [imgContainer, setImgContainer] = useState();
     const dispatch = useDispatch();
     const history = useHistory();
-    const items = useSelector(getItems);
     const user = useSelector(getUser);
-    const hasItem = (id) => items.findIndex(x => x.item === id);
 
     const date_options = {
         weekday: 'long', 
@@ -91,7 +89,6 @@ export default function Product() {
                                 min={1}
                                 placeholder="Q.tà"
                                 onChange={(e) => setQuantity(e.currentTarget.value)}
-                                disabled={hasItem(product._id) !== -1}
                             >
                                 <option value={1}>1</option>
                                 <option value={2}>2</option>
@@ -113,7 +110,6 @@ export default function Product() {
                                         owner: user.id
                                     })
                                 )}
-                                disabled={hasItem(product._id) !== -1}
                             >
                                 Aggiungi al carrello
                             </button>

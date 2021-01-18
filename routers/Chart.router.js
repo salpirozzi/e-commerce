@@ -7,15 +7,19 @@ const ChartModel = require('../models/Chart.model');
 ChartRouter.post("/add", function(req, res) {
     const form = formidable({ multiples: false });
  
-    form.parse(req, (err, fields, files) => {
+    form.parse(req, async(err, fields, files) => {
         if(err !== null)return res.status(422).json(err);
-        let createdProduct = new ChartModel({
+        const createdChart = await ChartModel.findOneAndUpdate({ 
             owner_id: fields.owner_id,
-            product: fields.product,
-            amount: fields.amount
+            product: fields.product
+        }, {
+            $inc: { amount: fields.amount },
+            created_at: new Date()
+        }, {
+            new: true,
+            upsert: true  // Questa proprietà serve per inserire l'oggetto in questione (unendo filtro + aggiornamento) se non esiste
         });
-        createdProduct.save();
-        res.json(createdProduct);
+        res.json(createdChart);
     });
 });
 

@@ -10,6 +10,7 @@ import EmailIcon from '@material-ui/icons/Email';
 
 import { useDispatch } from 'react-redux';
 import { login } from '../reducers/userSlice';
+import { updateItems } from '../reducers/chartSlice';
 
 import { toast } from 'react-toastify';
 
@@ -34,8 +35,10 @@ export default function Login() {
             email: values.email,
             password: values.password
         })
-        .then(res => {
-            dispatch(login(res.data));
+        .then(async res => {
+            const data = res.data;
+            await dispatch(login(data));
+            await dispatch(updateItems(data.user.id));
             toast.info("Login effettuato.");
         })
         .catch(err => toast.error(err.response.data))       

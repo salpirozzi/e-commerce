@@ -88,7 +88,7 @@ export default function Header() {
                 </div>
                 <div className="header__right__item" onMouseLeave={() => showDropdown(false)}>
                     <span className="header__right__item__top chart">
-                        {chart}
+                        {user ? chart : 0}
                     </span>
                     <Link className="header__right__item__bottom" to="/chart" onMouseOver={() => showDropdown(true)}>
                         <ShoppingCartIcon />

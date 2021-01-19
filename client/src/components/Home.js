@@ -4,16 +4,17 @@ import { axios } from '../core/axios';
 import NumberFormat from 'react-number-format';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { add, getItems } from '../reducers/chartSlice';
+import { add } from '../reducers/chartSlice';
+import { getUser } from '../reducers/userSlice';
 
 import './css/Home.css';
 import Banner from './images/Banner.jpg';
 
 export default function Home() {
+    const [quantity, setQuantity] = useState(1);
     const [products, setProducts] = useState([]);
+    const user = useSelector(getUser);
     const dispatch = useDispatch();
-    const items = useSelector(getItems);
-    const hasItem = (id) => items.includes(id);
     const date_options = {
         weekday: 'long', 
         year: 'numeric', 
@@ -89,12 +90,18 @@ export default function Home() {
                                         min={1}
                                         placeholder="Q.tà"
                                         className="product__card__quantity"
-                                        disabled={hasItem(x._id)}
+                                        value={quantity}
+                                        onChange={(e) => setQuantity(e.currentTarget.value)}
                                     />
                                     <button 
                                         type="button" 
-                                        onClick={() => dispatch(add(x._id))}
-                                        disabled={hasItem(x._id)}
+                                        onClick={() => dispatch(
+                                            add({
+                                                item: x._id, 
+                                                amount: parseInt(quantity),
+                                                owner: user.id
+                                            })
+                                        )}
                                     >
                                         Aggiungi al carrello
                                     </button>
